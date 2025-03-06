@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import List
 
+class ButtonsNamesOutput(BaseModel):
+    button_name: List[str]
+
 class ButtonCheckerAgentOutput(BaseModel): 
     button_name: str
     button_action_result_description: str
@@ -8,3 +11,5 @@ class ButtonCheckerAgentOutput(BaseModel):
 
 class ButtonCheckerAgentOutputs(BaseModel):
     outputs: List[ButtonCheckerAgentOutput]
+
+

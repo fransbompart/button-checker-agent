@@ -1,86 +1,103 @@
-from browser_use import Controller, Agent, Browser
+from browser_use import Agent, BrowserConfig, Browser, Controller, ActionResult
 from browser_use.browser.context import BrowserContextConfig, BrowserContext
-
 from langchain_openai import ChatOpenAI
-
-from .button_checker_agent_output import ButtonCheckerAgentOutputs
-
-TASK = """
-
-### Prompt for Page Buttons Checker Agent 
-
-**Objective:**
-In the current view of the page, identify all actionable elements (such as buttons, links, or interactive components) and systematically test if they function as expected. For each element:
-
-- Click it and observe the resulting change on the page.
-- Provide a brief description of what happened after the interaction.
-- Determine if the observed result aligns with the expected behavior based on the element’s label or appearance.
-
-**Important:**
-- If clicking an element navigates to a new page, return to the original page before proceeding with the next element.
-- Ensure all interactions are performed without missing any identified elements.
-- Maintain a structured record of interactions, including the element name, observed result, and success status (true/false).
-
----
-
-### Step 1: Identify Actionable Elements
-
-- Scan the webpage and identify all clickable elements.
-- Assign a meaningful name to each element based on what it represents (e.g., a profile icon should be labeled as "Profile Button").
-
----
-
-### Step 2: Click Each Button and Analyze the Interaction
-
-- Click on each identified button.
-- Observe the result of the action and summarize it in a short description.
-- Determine if the result aligns with the button's expected function:
- - If the action matches the button’s name, set result_success = True.
- - If the action does not match the button’s name, set result_success = False.
- - If the button leads to a new page, return to the previous page and continue checking the remaining buttons.
-"""
+from .button_checker_agent_output import ButtonsNamesOutput, ButtonCheckerAgentOutputs
+from .task_prompt import STEP_1, STEP_2
 
 class ButtonCheckerAgent():
     def __init__(self):
 
-        self.initial_actions= [
-            {
-                'open_tab': {
-                    'url': 'https://soyzen.com/home'
-                }
-            }
-        ]
-                
-        # browser = Browser()
-        # context = BrowserContext(
-        #     browser=browser,
-        #     config=BrowserContextConfig(
-        #         save_recording_path='recordings',
-        # ))
+        self.initial_actions= [{'open_tab': {'url': 'https://soyzen.com/home'}}]
 
-        # self.browser = browser
-        # self.browserContext = context
-
-        self.controller = Controller(
-            output_model=ButtonCheckerAgentOutputs,
+        # self.controller = agentController.controller
+        
+        context = BrowserContext(
+            browser = Browser(config = BrowserConfig(headless=True)),
+            config = BrowserContextConfig(
+                save_recording_path ='recordings_2',
+                browser_window_size = {'width': 1280, 'height': 500},
+            )
         )
 
-        self.history = []
+        self.browserContext = context
 
-        self.agent = Agent(
-            task=TASK,
+        self.firts_agent_history = []
+        self.second_agent_history = []
+
+
+    async def run_firts_agent(self, prompt: str) -> ButtonsNamesOutput:
+        firts_agent = Agent(
+            task=prompt,
             llm=ChatOpenAI(model='gpt-4o'),
-            browser=Browser(),
+            browser_context=self.browserContext,
             initial_actions=self.initial_actions,
+            controller=Controller(output_model=ButtonsNamesOutput),
         )
+
+        self.firts_agent_history = await firts_agent.run()
+
+        result = self.firts_agent_history.final_result()
+
+        if result:
+            buttons: ButtonsNamesOutput = ButtonsNamesOutput.model_validate_json(result)
+
+            for button_name in buttons:
+                print(f'Button Name: {button_name}')
+
+                return buttons
+        else:
+            raise Exception('No buttons found')
+        
+
+    async def run_second_agent(self, prompt: str):
+        secondAgentController=Controller(output_model=ButtonCheckerAgentOutputs)
+
+        @secondAgentController.action('If clicking an element navigates to a new page, return to the previous one')
+        async def return_to_previous_page(browser: Browser):
+            page = await browser.get_current_page()
+            await page.goto('https://soyzen.com/home')
+            
+            print('Returned to the original previous page')
+            return ActionResult(extracted_content='Returned to the original previous page')
+
+        second_agent = Agent(
+            task=prompt,
+            llm=ChatOpenAI(model='gpt-4o'),
+            browser_context=self.browserContext,
+            initial_actions=self.initial_actions,
+            controller=secondAgentController,
+        )
+
+        self.second_agent_history = await second_agent.run()
+
+        result = self.second_agent_history.final_result()
+
+        if result:
+            buttons: ButtonCheckerAgentOutputs = ButtonCheckerAgentOutputs.model_validate_json(result)
+
+            for button in buttons.outputs:
+                print(f'Button Name: {button.button_name}')
+                print(f'Button Action Result Description: {button.button_action_result_description}')
+                print(f'Button Action Result Success: {button.button_action_result_success}')
+        else:
+            raise Exception('No buttons found')
+
 
     async def check(self):
-        await self.agent.run()
+        buttons_names = await self.run_firts_agent(prompt=STEP_1)
 
-        input("Press Enter to close the browser...")
+        print(f'Buttons found: {buttons_names}')
 
+        prompt = STEP_2 + '\n'.join([f"- {button_name}" for button_name in buttons_names])
+
+        buttons_output = await self.run_second_agent(prompt=prompt)
+
+        print(f'Buttons output: {buttons_output.outputs}')
+
+        await self.run_second_agent()
+
+        await self.browserContext.close()
         await self.browser.close()
-
         
 
         
