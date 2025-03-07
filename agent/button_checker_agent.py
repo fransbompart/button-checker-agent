@@ -2,12 +2,15 @@ from browser_use import Agent, BrowserConfig, Browser, Controller, ActionResult
 from browser_use.browser.context import BrowserContextConfig, BrowserContext
 from langchain_openai import ChatOpenAI
 from .button_checker_agent_output import ButtonsNamesOutput, ButtonCheckerAgentOutputs
-from .task_prompt import STEP_1, STEP_2
+from .task_prompt import STEP, STEP_1, STEP_2
 
 class ButtonCheckerAgent():
     def __init__(self):
 
-        self.initial_actions= [{'open_tab': {'url': 'https://soyzen.com/home'}}]
+        self.initial_actions= [{
+            'open_tab': {'url': 'https://aqustico.com/home'},
+            'scroll_down': {'amount': 3000},
+        }]
         
         context = BrowserContext(
             browser = Browser(config = BrowserConfig(headless=True)),
@@ -23,28 +26,52 @@ class ButtonCheckerAgent():
         self.second_agent_history = []
 
 
-    async def run_firts_agent(self, prompt: str) -> ButtonsNamesOutput:
-        firts_agent = Agent(
-            task=prompt,
+    async def run_firts_agent(self, prompt: str) :
+        controller = Controller()
+
+        @controller.action('If a pop up appears, close it')
+        async def close_pop_up(browser: Browser):
+            page = await browser.get_current_page()
+
+            close_button = await page.query_selector('.close-button')
+
+
+
+
+        agent = Agent(
+            task="""Click on the search icon that is on the top right corner of the page. If a pop-up appears, use the custom function close_pop_up.
+            """,
             llm=ChatOpenAI(model='gpt-4o'),
             browser_context=self.browserContext,
             initial_actions=self.initial_actions,
-            controller=Controller(output_model=ButtonsNamesOutput),
+            controller=Controller(),
         )
 
-        self.firts_agent_history = await firts_agent.run()
+        await agent.run()
 
-        result = self.firts_agent_history.final_result()
+        # firstAgentController=Controller(output_model=ButtonsNamesOutput)
 
-        if result:
-            buttons: ButtonsNamesOutput = ButtonsNamesOutput.model_validate_json(result)
+        # firts_agent = Agent(
+        #     task=prompt,
+        #     llm=ChatOpenAI(model='gpt-4o'),
+        #     browser_context=self.browserContext,
+        #     initial_actions=self.initial_actions,
+        #     controller=firstAgentController,
+        # )
 
-            for button_name in buttons:
-                print(f'Button Name: {button_name}')
+        # self.firts_agent_history = await firts_agent.run()
 
-                return buttons
-        else:
-            raise Exception('No buttons found')
+        # result = self.firts_agent_history.final_result()
+
+        # if result:
+        #     buttons: ButtonsNamesOutput = ButtonsNamesOutput.model_validate_json(result)
+
+        #     for button_name in buttons:
+        #         print(f'Button Name: {button_name}')
+
+        #         return buttons
+        # else:
+        #     raise Exception('No buttons found')
         
 
     async def run_second_agent(self, prompt: str):
@@ -84,19 +111,19 @@ class ButtonCheckerAgent():
         
 
     async def check(self) -> ButtonCheckerAgentOutputs:
-        buttons_names = await self.run_firts_agent(prompt=STEP_1)
+        await self.run_firts_agent(prompt=STEP)
 
-        print(f'Buttons found: {buttons_names}')
+        # print(f'Buttons found: {buttons_names}')
 
-        prompt = STEP_2 + '\n'.join([f"- {button_name}" for button_name in buttons_names])
+        # prompt = STEP_2 + '\n'.join([f"- {button_name}" for button_name in buttons_names])
 
-        buttons_output = await self.run_second_agent(prompt=prompt)
+        # buttons_output = await self.run_second_agent(prompt=prompt)
 
-        print(f'Buttons output: {buttons_output.outputs}')
+        # print(f'Buttons output: {buttons_output.outputs}')
 
         await self.browserContext.close()
 
-        return buttons_output
+        # return buttons_names
         
 
         

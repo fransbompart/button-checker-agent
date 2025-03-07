@@ -1,37 +1,12 @@
-TASK = """
+STEP = """**Instructions:**  
+1. Identify all actionable elements on the current screen, such as buttons, links, or interactive components.  
+2. Assign a meaningful name to each element based on what it represents. For example:  
+   - A profile icon should be labeled as "Profile Button".  
+   - A "Learn More" link should be labeled as "Learn More Link".  
+3. List all identified elements with their assigned names.  
 
-### Prompt for Page Buttons Checker Agent 
-
-**Objective:**
-In the current view of the page, identify all actionable elements (such as buttons, links, or interactive components) and systematically test if they function as expected. For each element:
-
-- Click it and observe the resulting change on the page.
-- Provide a brief description of what happened after the interaction.
-- Determine if the observed result aligns with the expected behavior based on the element’s label or appearance.
-
-**Important:**
-- If clicking an element navigates to a new page, return to the previous one.
-- Ensure all interactions are performed without missing any identified elements.
-- Maintain a structured record of interactions, including the element name, observed result, and success status (true/false).
-- Don't scroll, just identify the elements that are visible on the current screen, then finish.
-
----
-
-### Step 1: Identify Actionable Elements
-
-- Scan the webpage and identify all clickable elements.
-- Assign a meaningful name to each element based on what it represents (e.g., a profile icon should be labeled as "Profile Button").
-
----
-
-### Step 2: Click Each Button and Analyze the Interaction
-
-- Click on each identified button.
-- Observe the result of the action and summarize it in a short description.
-- Determine if the result aligns with the button's expected function:
- - If the action matches the button’s name, set result_success = True.
- - If the action does not match the button’s name, set result_success = False.
- - If the button leads to a new page, return to the previous page and continue checking the remaining buttons.
+**Important:**  
+- Do not scroll. This task is limited to the current screen.
 """
 
 STEP_1 = """Identify all actionable elements (such as buttons, links, or interactive components) 
@@ -47,21 +22,27 @@ Click on the buttons listed below and analyze their interactions.
 
 ---  
 
-**Instructions:**   
+**Instructions:**  
 1. Locate each button on the screen based on the names in the provided list.  
 2. Click on the button.  
-3. Observe the result of the action, take your time, then summarize it in a short description.  
-4. Determine if the result aligns with the button’s expected function:  
-   - If the action matches the button’s name, set **result_success = True**.  
-   - If the action does not match the button’s name, set **result_success = False**.  
-5. If the button leads to a new page, **return to the original page using the custom function return_to_previous_page** before proceeding with the next button.  
-6. Repeat the process for all remaining buttons in the list.  
-7. Conclude the task once all buttons have been tested.  
+3. Observe the result of the action carefully. Take your time to analyze the UI changes. Wait for at least 5 seconds before proceeding to ensure all changes are fully loaded.  
+4. Summarize the result in a short description. For example:  
+   - Example 1: "A pop-up opened showing the user profile options."  
+   - Example 2: "The page navigated to a new screen displaying account settings."  
+   - Example 3: "A dropdown menu appeared with additional options."  
+5. Determine if the result aligns with the button’s expected function:  
+   - If the action matches the button’s name, set result_success = True.  
+   - If the action does not match the button’s name, set result_success = False.  
+6. **If the button leads to a new page, use the custom function return_to_previous_page** to return to the original page before proceeding with the next button.  
+7. Repeat the process for all remaining buttons in the list.  
+8. Conclude the task once all buttons have been tested.  
 
----  
+---
 
-**Important:**   
-- If clicking a button navigates to a different page, **always return to the original page using the custom function return_to_previous_page** before continuing.    
+**Important:**  
+- Do not make suggestions or assumptions. Simply describe the observed result and determine if it aligns with the button’s expected function.  
+- If clicking a button navigates to a different page, always return to the original page using the custom function return_to_previous_page before continuing.    
+
 ---  
 
 **List of Buttons:**  
