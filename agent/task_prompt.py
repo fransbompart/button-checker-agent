@@ -13,6 +13,7 @@ In the current view of the page, identify all actionable elements (such as butto
 - If clicking an element navigates to a new page, return to the previous one.
 - Ensure all interactions are performed without missing any identified elements.
 - Maintain a structured record of interactions, including the element name, observed result, and success status (true/false).
+- Don't scroll, just identify the elements that are visible on the current screen, then finish.
 
 ---
 
@@ -49,7 +50,7 @@ Click on the buttons listed below and analyze their interactions.
 **Instructions:**   
 1. Locate each button on the screen based on the names in the provided list.  
 2. Click on the button.  
-3. Observe the result of the action and summarize it in a short description.  
+3. Observe the result of the action, take your time, then summarize it in a short description.  
 4. Determine if the result aligns with the button’s expected function:  
    - If the action matches the button’s name, set **result_success = True**.  
    - If the action does not match the button’s name, set **result_success = False**.  
@@ -61,7 +62,6 @@ Click on the buttons listed below and analyze their interactions.
 
 **Important:**   
 - If clicking a button navigates to a different page, **always return to the original page using the custom function return_to_previous_page** before continuing.    
-
 ---  
 
 **List of Buttons:**  

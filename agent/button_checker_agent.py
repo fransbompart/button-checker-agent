@@ -8,13 +8,11 @@ class ButtonCheckerAgent():
     def __init__(self):
 
         self.initial_actions= [{'open_tab': {'url': 'https://soyzen.com/home'}}]
-
-        # self.controller = agentController.controller
         
         context = BrowserContext(
             browser = Browser(config = BrowserConfig(headless=True)),
             config = BrowserContextConfig(
-                save_recording_path ='recordings_2',
+                save_recording_path ='recordings',
                 browser_window_size = {'width': 1280, 'height': 500},
             )
         )
@@ -79,11 +77,13 @@ class ButtonCheckerAgent():
                 print(f'Button Name: {button.button_name}')
                 print(f'Button Action Result Description: {button.button_action_result_description}')
                 print(f'Button Action Result Success: {button.button_action_result_success}')
+            
+            return buttons
         else:
             raise Exception('No buttons found')
+        
 
-
-    async def check(self):
+    async def check(self) -> ButtonCheckerAgentOutputs:
         buttons_names = await self.run_firts_agent(prompt=STEP_1)
 
         print(f'Buttons found: {buttons_names}')
@@ -94,10 +94,9 @@ class ButtonCheckerAgent():
 
         print(f'Buttons output: {buttons_output.outputs}')
 
-        await self.run_second_agent()
-
         await self.browserContext.close()
-        await self.browser.close()
+
+        return buttons_output
         
 
         
