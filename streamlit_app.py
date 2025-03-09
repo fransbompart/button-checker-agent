@@ -1,5 +1,5 @@
 import streamlit as st
-from agent.button_checker_agent import ButtonCheckerAgent
+from button_checker_agent.button_checker_agent import ButtonCheckerAgent
 import asyncio
 import glob
 
