@@ -44,7 +44,7 @@ async def check_content():
         api_key = api_key,
     )
 
-    await agent.run()
+    await agent.check_section()
 
 
 async def main():
