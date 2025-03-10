@@ -3,10 +3,12 @@ from typing import List
 
 class PageContentPreview(BaseModel): 
     content_preview_title: str
+    content_preview_categories: str
+    content_page_url: str
     content_preview_type: str
-    content_preview_category: str
-    content_preview_access_type: str
-    content_url: str
+    public_access: bool
+    content_preview_duration: str | None
+    content_preview_index: int
 
 class PageContentPreviews(BaseModel):
     previews: List[PageContentPreview]
