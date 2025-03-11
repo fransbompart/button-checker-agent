@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
-
+import os
 from browser_use import Agent, BrowserConfig, Browser, Controller, ActionResult
 from pydantic import SecretStr
 from browser_use.browser.context import BrowserContextConfig, BrowserContext
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from .identify_content_prompt import IDENTIFY_CONTENT_TASK
-from .content_checker_by_section_agent_output import PageContentPreviews, PageContentPreview, PageContentMatch, PagesContentsMatches
+from .content_checker_by_section_agent_output import PagesContents, PageContent, PageContentPreviews, PageContentPreview, PageContentMatch, PagesContentsMatches
 
 class ContentCheckerBySectionAgent(ABC):
     def __init__(
@@ -43,13 +43,10 @@ class ContentCheckerBySectionAgent(ABC):
         controller = Controller(output_model=PageContentPreviews)
 
         prompt = IDENTIFY_CONTENT_TASK.replace('pageSectionName', self.pageSectionName).replace('previewDetails', self.previewDetailsPrompt).replace('content', self.contentType)
-                
-        prompt = f"## System Context\n{self.messageContext}\n---\n## Task\n{prompt}"
-        print(prompt)
 
         agent = Agent(
             task=prompt,
-            llm=ChatGoogleGenerativeAI(model='gemini-1.5-flash', api_key=SecretStr(self.api_key)),
+            llm=ChatGoogleGenerativeAI(model='gemini-2.0-flash', api_key=SecretStr(self.api_key)),
             browser_context=self.browserContext,
             initial_actions=self.initialActions,
             controller=controller,
@@ -60,37 +57,79 @@ class ContentCheckerBySectionAgent(ABC):
         identify_content_agent_history.save_to_file(self.agentPath + '/identify_content_agent/history.json')
 
         result = identify_content_agent_history.final_result()
+        self.result_to_file('identify_content_agent/result', result)
 
         if result:
             pageContents: PageContentPreviews = PageContentPreviews.model_validate_json(result)
 
             for pageContent in pageContents.previews:
                 print(pageContent)
+                print('---')
             
             return pageContents
         else:
             raise Exception('No Page Contents found')
 
     @abstractmethod
-    async def check_page_content(self, previewDetails: PageContentPreview) -> PageContentMatch:
-        pass        
+    async def check_page_content(self, previewDetails: PageContentPreview, previewNumber: int) -> PageContent:
+        pass  
+    
+    def result_to_file(self, fileName: str, result: str):
+        directory = os.path.dirname(self.agentPath + '/' + fileName)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(self.agentPath + '/' + fileName + '.json', 'w') as f:
+            f.write(result)
+
+    async def check_previews_vs_pages(self, previews: PageContentPreviews, pages: PagesContents) -> PagesContentsMatches:
+        llm = ChatGoogleGenerativeAI(
+            model='gemini-1.5-flash',
+            api_key=SecretStr(self.api_key),
+        )   
+
+        prompt = "In base of the information provided, verify if each of the next previews and pages contents match.\n---\n" 
+        
+        for i in range(len(previews.previews[:4])):
+            preview = previews.previews[i]
+            page = pages.pages[i]
+
+            prompt += '{\n' + ' preview: {\n' + {preview.model_dump_json()} + '\n}\n page: {\n' + page.model_dump_json() + '\n}\n}\n'
+
+        print(prompt)
+
+        llmStructured = llm.with_structured_output(PagesContentsMatches)
+
+        response = llmStructured.invoke(prompt)
+
+        return response
+
         
     async def run(self) -> PagesContentsMatches:
         pagesContentsPreviews = await self.identify_content_list()
 
-        pagesContentsMatches = PagesContentsMatches(contents=[])
+        contents = PagesContents(pages=[])
 
         if pagesContentsPreviews: 
-            for preview in pagesContentsPreviews.previews[:3]:
-                pageContentMatch = await self.check_page_content(preview)        
+            for i, preview in enumerate(pagesContentsPreviews.previews[:4]):
+                page = await self.check_page_content(preview, i)        
             
-                if pageContentMatch:
-                    pagesContentsMatches.contents.append(pageContentMatch)
+                if page:
+                    contents.pages.append({
+                        'preview': preview,
+                        'page': page,
+                    })
+                    
         else:
             raise Exception('No Page Contents found')
         
-        await self.browserContext.close()
-        return pagesContentsMatches
+        self.browserContext.close()
+
+        self.result_to_file('check_content_agent/final/previews', pagesContentsPreviews.model_dump_json())
+        self.result_to_file('check_content_agent/final/contents', contents.model_dump_json())
+
+        matches = self.check_previews_vs_pages(pagesContentsPreviews, contents)
+
+        return matches
 
         
 

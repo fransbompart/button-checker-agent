@@ -1,15 +1,10 @@
-EVALUATE_CONTENT_TASK = """### Instructions:
-1. Find the section with the name "pageSectionName".
-2. Find the content item with the title "contentPreviewTitle" that **match exactly**. If you have to scroll because the content item is not in the visible area, do it **SLOWLY**.
-3. Click on the content that has the title "contentPreviewTitle", use the custom function click_post_item.
-4. If the content is Subscriber-only, a subscription dialog will appear. In this case, close the dialog and finish.
-5. If the content is Public, wait for the page of the content to load.
-6. Check if the the content article matches with the details provided, also if there is any orthographic error.
-
+EVALUATE_CONTENT_TASK = """Click on the post item with title "content_preview_title" using the custom function click_post_item, the number of the post is previewNumber.
+Then:
+- If you are in the post page, **extract** and describe the whole page, include the page url on your response.
+- Else, if a dialog with message "¡Prueba Gratis 5 días!" appers, say it and end the task successfully.
 ---
-
-### Important:
-- Don't use the search bar to find the content, if you are not able to click on the item, end the task
-
----
+**Important:**
+- First, if a dialog about Calendario Lunar appears, close it on the x before continue.
+- If you don't see the post item, DON'T SCROLL, use directly the function click_post_item.
 """
+
