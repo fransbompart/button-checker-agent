@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import os
+import json
 from browser_use import Agent, BrowserConfig, Browser, Controller, ActionResult
 from pydantic import SecretStr
 from browser_use.browser.context import BrowserContextConfig, BrowserContext
@@ -26,8 +27,10 @@ class ContentCheckerBySectionAgent(ABC):
 
         self.agentPath = agentPath
 
+        self.browser = Browser(config = BrowserConfig(headless=True)) 
+
         context = BrowserContext(
-            browser = Browser(config = BrowserConfig(headless=True)),
+            browser = self.browser,
             config = BrowserContextConfig(
                 save_recording_path = self.agentPath + '/recordings',
             )
@@ -46,7 +49,7 @@ class ContentCheckerBySectionAgent(ABC):
 
         agent = Agent(
             task=prompt,
-            llm=ChatGoogleGenerativeAI(model='gemini-2.0-flash', api_key=SecretStr(self.api_key)),
+            llm=ChatGoogleGenerativeAI(model='gemini-1.5-flash', api_key=SecretStr(self.api_key)),
             browser_context=self.browserContext,
             initial_actions=self.initialActions,
             controller=controller,
@@ -93,7 +96,7 @@ class ContentCheckerBySectionAgent(ABC):
             preview = previews.previews[i]
             page = pages.pages[i]
 
-            prompt += '{\n' + ' preview: {\n' + {preview.model_dump_json()} + '\n}\n page: {\n' + page.model_dump_json() + '\n}\n}\n'
+            prompt += '{\n' + ' preview: ' + preview.model_dump_json() + '\n page: ' + page.model_dump_json() + '\n}\n'
 
         print(prompt)
 
@@ -103,6 +106,9 @@ class ContentCheckerBySectionAgent(ABC):
 
         return response
 
+    async def load_json_file(self, filePath: str):
+        with open(filePath, 'r') as file:
+            return json.load(file)
         
     async def run(self) -> PagesContentsMatches:
         pagesContentsPreviews = await self.identify_content_list()
@@ -114,20 +120,24 @@ class ContentCheckerBySectionAgent(ABC):
                 page = await self.check_page_content(preview, i)        
             
                 if page:
-                    contents.pages.append({
-                        'preview': preview,
-                        'page': page,
-                    })
+                    contents.pages.append(page)
                     
         else:
             raise Exception('No Page Contents found')
         
-        self.browserContext.close()
-
         self.result_to_file('check_content_agent/final/previews', pagesContentsPreviews.model_dump_json())
         self.result_to_file('check_content_agent/final/contents', contents.model_dump_json())
 
-        matches = self.check_previews_vs_pages(pagesContentsPreviews, contents)
+        await self.browser.close()
+        await self.browserContext.close()
+
+        previews_data = await self.load_json_file(self.agentPath + '/check_content_agent/final/previews.json')
+        contents_data = await self.load_json_file(self.agentPath + '/check_content_agent/final/contents.json')
+
+        pagesContentsPreviews = PageContentPreviews.model_validate(previews_data)
+        contents = PagesContents.model_validate(contents_data)
+
+        matches = await self.check_previews_vs_pages(pagesContentsPreviews, contents)
 
         return matches
 

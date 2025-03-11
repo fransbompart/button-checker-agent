@@ -22,7 +22,7 @@ class VidaFitContentCheckerBySectionAgent(ContentCheckerBySectionAgent):
             element = await page.query_selector(f'a[href="{pageUrl}"]')
             if element:
                 await element.click()
-                return ActionResult(success=True)
+                return ActionResult(extracted_content='Clicked on the recipe and now I am in the article page', success=True)
 
         details = [
             f'- Title: {previewDetails.content_preview_title}',
@@ -37,7 +37,7 @@ class VidaFitContentCheckerBySectionAgent(ContentCheckerBySectionAgent):
 
         agent = Agent(
             task=prompt,
-            llm=ChatGoogleGenerativeAI(model='gemini-2.0-flash', api_key=SecretStr(self.api_key)),
+            llm=ChatGoogleGenerativeAI(model='gemini-1.5-flash', api_key=SecretStr(self.api_key)),
             browser_context=self.browserContext,
             initial_actions=self.initialActions,
             controller=controller,

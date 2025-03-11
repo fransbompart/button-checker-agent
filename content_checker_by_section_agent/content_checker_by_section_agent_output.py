@@ -13,8 +13,7 @@ class PageContentPreviews(BaseModel):
     
 class PageContent(BaseModel): 
     dialog_opened: bool
-    page_opened: bool
-    page_description: str | None
+    page_description: str
     page_url: str | None
 
 class PagesContents(BaseModel): 
@@ -26,7 +25,7 @@ class PageContentMatch(BaseModel):
     differences: str | None
     
 class PagesContentsMatches(BaseModel):
-    contents: List[PageContent]
+    contents: List[PageContentMatch]
 
 
 

@@ -39,7 +39,7 @@ class SoyZenContentCheckerBySectionAgent(ContentCheckerBySectionAgent):
             task=EVALUATE_CONTENT_TASK
                 .replace('content_preview_title', previewDetails.content_preview_title)
                 .replace('previewNumber', str(previewNumber)),
-            llm=ChatGoogleGenerativeAI(model='gemini-2.0-flash', api_key=SecretStr(self.api_key)),
+            llm=ChatGoogleGenerativeAI(model='gemini-1.5-flash', api_key=SecretStr(self.api_key)),
             browser_context=self.browserContext,
             initial_actions=self.initialActions,
             controller=evaluate_post_controller

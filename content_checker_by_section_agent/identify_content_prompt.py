@@ -9,10 +9,12 @@
 # """
 
 # SoyZen
-IDENTIFY_CONTENT_TASK="""Find the section "pageSectionName" in the page. 
-Then extract all the information about the posts that are **ON the "pageSectionName" section**. 
-For each post, return the following details:previewDetails
+IDENTIFY_CONTENT_TASK="""### Instructions
+1. Find the section "pageSectionName" in the page. 
+2. Extract the next details for each content item that are **ON the "pageSectionName" section**:previewDetails 
+
 ---
+
 **Important:**
 - First, if a dialog about Calendario Lunar appears, close it on the x before continue.
 """
