@@ -1,10 +1,15 @@
 import asyncio
-from button_checker_agent.button_checker_agent import ButtonCheckerAgent
-from content_checker_by_section_agent.soyZen.soy_zen_content_checker_by_section_agent import SoyZenContentCheckerBySectionAgent
-from content_checker_by_section_agent.vidaFit.vida_fit_content_checker_by_section_agent import VidaFitContentCheckerBySectionAgent
 from lmnr import Laminar
 from dotenv import load_dotenv
 import os
+
+from content_checker_by_section_agent.content_checker_by_section_agent_runner import ContentCheckerAgentRunner
+
+from button_checker_agent.button_checker_agent import ButtonCheckerAgent
+
+from content_checker_by_section_agent.soyZen.soy_zen_content_checker_by_section_agent import SoyZenContentCheckerBySectionAgent
+from content_checker_by_section_agent.vidaFit.vida_fit_content_checker_by_section_agent import VidaFitContentCheckerBySectionAgent
+
 
 async def check_buttons():
     agent = ButtonCheckerAgent(
@@ -19,51 +24,14 @@ async def check_buttons():
     await agent.check()
 
 async def check_content_soy_zen():
-    api_key = os.getenv('GEMINI_API_KEY', '')
+    content_output = await ContentCheckerAgentRunner.run("SoyZen")
 
-    previewDetailsPrompt = """
-    - `content_preview_title`: The title of the content.
-    - `content_preview_categories`: The categories of the content (if avaible).
-    - `content_preview_type`: The type of the content, can be a Audio/Video or Blog.
-    - `public_access`: False if item has a Padlock Icon on one border, else True.
-    - `content_preview_duration`: The duration of the content (if available).
-    """
-
-    agent = SoyZenContentCheckerBySectionAgent(
-        initialActions = [
-            {'open_tab': {'url': 'https://soyzen.com/home'}},
-        ],
-        pageSectionName = 'Mood Zen del día',
-        previewDetailsPrompt= previewDetailsPrompt,
-        pageSectionNumber = 0,
-        contentType = 'post',
-        agentPath = 'content_checker_by_section_agent/soyZen',
-        api_key = api_key,
-    )
-
-    await agent.run()
-
-async def check_content_vida_fit():
-    api_key = os.getenv('GEMINI_API_KEY', '')
+    print(content_output)
     
-    previewDetailsPrompt = """
-    - `content_preview_title`
-    - `content_preview_categories`
-    """
+async def check_content_vida_fit():
+    content_output = await ContentCheckerAgentRunner.run("VidaFit")
 
-    agent = VidaFitContentCheckerBySectionAgent(
-        initialActions = [
-            {'open_tab': {'url': 'https://vida-fit.com/recetas-fitness/'}},
-        ],
-        pageSectionName = '¿Buscas recetas saludables y fáciles? Estás en el sitio indicado',
-        previewDetailsPrompt= previewDetailsPrompt,
-        contentType = 'recipe',
-        agentPath = 'content_checker_by_section_agent/vidaFit',
-        api_key = api_key,
-    )
-
-    await agent.run()
-
+    print(content_output)
 
 async def main():
     load_dotenv()

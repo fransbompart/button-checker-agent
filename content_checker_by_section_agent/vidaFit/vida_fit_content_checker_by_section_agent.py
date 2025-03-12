@@ -5,17 +5,33 @@ from browser_use.browser.context import BrowserContextConfig, BrowserContext
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from ..content_checker_by_section_agent_output import PageContentPreviews, PageContentPreview, PageContent, PagesContentsMatches
-from .evaluate_content_prompt import EVALUATE_CONTENT_TASK
+from .prompts import IDENTIFY_CONTENT_TASK_VIDA_FIT, EVALUATE_CONTENT_TASK 
 
 class VidaFitContentCheckerBySectionAgent(ContentCheckerBySectionAgent):
-    def __init__(self, initialActions: list, pageSectionName:str, contentType:str, previewDetailsPrompt:str, agentPath: str, api_key: str):
-        super().__init__(initialActions, pageSectionName, contentType, previewDetailsPrompt, agentPath, api_key)
+    def __init__(
+            self,
+            initialActions: list,
+            pageSectionName: str,
+            contentType: str,
+            previewDetailsPrompt: str,
+            agentPath: str,
+            api_key: str,
+        ):
+        super().__init__(
+            initialActions,
+            pageSectionName,
+            contentType,
+            previewDetailsPrompt,
+            agentPath,
+            api_key,
+            IDENTIFY_CONTENT_TASK_VIDA_FIT,
+        )
 
 
     async def check_page_content(self, previewDetails: PageContentPreview, previewNumber:int) -> PageContent:
         controller = Controller(output_model=PageContent)
 
-        @controller.action('Click on recipe item')
+        @controller.action('Click recipe item')
         async def click_recipe_item(browser: Browser, pageUrl: str) -> ActionResult:
             page = await browser.get_current_page()
 

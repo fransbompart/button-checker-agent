@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 import os
-import json
+from utils.load_json_file import load_json_file
 from browser_use import Agent, BrowserConfig, Browser, Controller, ActionResult
 from pydantic import SecretStr
 from browser_use.browser.context import BrowserContextConfig, BrowserContext
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
-from .identify_content_prompt import IDENTIFY_CONTENT_TASK
 from .content_checker_by_section_agent_output import PagesContents, PageContent, PageContentPreviews, PageContentPreview, PageContentMatch, PagesContentsMatches
 
 class ContentCheckerBySectionAgent(ABC):
@@ -18,12 +17,16 @@ class ContentCheckerBySectionAgent(ABC):
             previewDetailsPrompt:str,
             agentPath: str,
             api_key: str,
-            messageContext: str = None,):
+            identifyContentTaskPrompt: str,
+            messageContext: str = None,
+        ):
 
         self.initialActions= initialActions
         self.pageSectionName = pageSectionName
         self.contentType = contentType
         self.previewDetailsPrompt = previewDetailsPrompt
+
+        self.identifyContentTaskPrompt = identifyContentTaskPrompt
 
         self.agentPath = agentPath
 
@@ -45,7 +48,7 @@ class ContentCheckerBySectionAgent(ABC):
     async def identify_content_list(self) -> PageContentPreviews:
         controller = Controller(output_model=PageContentPreviews)
 
-        prompt = IDENTIFY_CONTENT_TASK.replace('pageSectionName', self.pageSectionName).replace('previewDetails', self.previewDetailsPrompt).replace('content', self.contentType)
+        prompt = self.identifyContentTaskPrompt.replace('pageSectionName', self.pageSectionName).replace('previewDetails', self.previewDetailsPrompt).replace('content', self.contentType)
 
         agent = Agent(
             task=prompt,
@@ -92,7 +95,7 @@ class ContentCheckerBySectionAgent(ABC):
 
         prompt = "In base of the information provided, verify if each of the next previews and pages contents match.\n---\n" 
         
-        for i in range(len(previews.previews[:4])):
+        for i in range(len(previews.previews[:6])):
             preview = previews.previews[i]
             page = pages.pages[i]
 
@@ -105,18 +108,14 @@ class ContentCheckerBySectionAgent(ABC):
         response = llmStructured.invoke(prompt)
 
         return response
-
-    async def load_json_file(self, filePath: str):
-        with open(filePath, 'r') as file:
-            return json.load(file)
         
-    async def run(self) -> PagesContentsMatches:
+    async def run(self):
         pagesContentsPreviews = await self.identify_content_list()
 
         contents = PagesContents(pages=[])
 
         if pagesContentsPreviews: 
-            for i, preview in enumerate(pagesContentsPreviews.previews[:4]):
+            for i, preview in enumerate(pagesContentsPreviews.previews[:6]):
                 page = await self.check_page_content(preview, i)        
             
                 if page:
@@ -131,15 +130,19 @@ class ContentCheckerBySectionAgent(ABC):
         await self.browser.close()
         await self.browserContext.close()
 
-        previews_data = await self.load_json_file(self.agentPath + '/check_content_agent/final/previews.json')
-        contents_data = await self.load_json_file(self.agentPath + '/check_content_agent/final/contents.json')
+        previews_data = await load_json_file(self.agentPath + '/check_content_agent/final/previews.json')
+        contents_data = await load_json_file(self.agentPath + '/check_content_agent/final/contents.json')
 
         pagesContentsPreviews = PageContentPreviews.model_validate(previews_data)
         contents = PagesContents.model_validate(contents_data)
 
         matches = await self.check_previews_vs_pages(pagesContentsPreviews, contents)
 
-        return matches
+        return {
+            'matches': matches.model_dump_json(),
+            'previews': pagesContentsPreviews.model_dump_json(),
+            'contents': contents.model_dump_json()
+        }
 
         
 

@@ -6,8 +6,7 @@ from browser_use.agent.views import AgentState
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from ..content_checker_by_section_agent_output import PageContent, PageContentPreviews, PageContentPreview, PagesContents, PagesContentsMatches
-from .evaluate_content_prompt import EVALUATE_CONTENT_TASK
-from .system_prompt import SYSTEM_PROMPT
+from .prompts import IDENTIFY_CONTENT_TASK_SOY_ZEN, EVALUATE_CONTENT_TASK, SYSTEM_PROMPT
 
 class SoyZenContentCheckerBySectionAgent(ContentCheckerBySectionAgent):
     def __init__(
@@ -18,12 +17,20 @@ class SoyZenContentCheckerBySectionAgent(ContentCheckerBySectionAgent):
             previewDetailsPrompt:str,
             contentType:str,
             agentPath: str,
-            api_key: str
+            api_key: str,
         ):
-        super().__init__(initialActions, pageSectionName, contentType, previewDetailsPrompt, agentPath, api_key, SYSTEM_PROMPT)
+        super().__init__(
+            initialActions,
+            pageSectionName,
+            contentType,
+            previewDetailsPrompt,
+            agentPath,
+            api_key,
+            IDENTIFY_CONTENT_TASK_SOY_ZEN,
+            SYSTEM_PROMPT
+        )
         self.pageSectionNumber = pageSectionNumber
         
-
     async def check_page_content(self, previewDetails: PageContentPreview, previewNumber: int) -> PageContent:
         evaluate_post_controller = Controller(output_model=PageContent)
 
