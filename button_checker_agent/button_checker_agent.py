@@ -5,7 +5,7 @@ from .button_checker_agent_output import ButtonsNamesOutput, ButtonCheckerAgentO
 from .task_prompt import STEP_1, STEP_2
 
 class ButtonCheckerAgent():
-    def __init__(self, initial_actions: list, return_page_url:str, recordings_path: str, browser_window_size: dict):
+    def __init__(self, initial_actions: list, return_page_url:str, browser_window_size: dict):
 
         self.initial_actions= initial_actions
         self.return_page_url = return_page_url
@@ -13,7 +13,6 @@ class ButtonCheckerAgent():
         context = BrowserContext(
             browser = Browser(config = BrowserConfig(headless=True)),
             config = BrowserContextConfig(
-                save_recording_path = recordings_path,
                 browser_window_size = browser_window_size,
             )
         )

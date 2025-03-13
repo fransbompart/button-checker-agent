@@ -30,9 +30,7 @@ class LogInAgent():
 
         context = BrowserContext(
             browser = self.browser,
-            config = BrowserContextConfig(
-                save_recording_path = self.agentPath + '/recordings',
-            )
+            config = BrowserContextConfig()
         )
 
         self.browserContext = context

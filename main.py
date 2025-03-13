@@ -18,7 +18,6 @@ async def check_buttons():
         initial_actions=[
             {'open_tab': {'url': 'https://aqustico.com/home'}},
         ],
-        recordings_path='button_checker_agent/recordings_aqustico',
         return_page_url='https://aqustico.com/home',
         browser_window_size={'width': 1280, 'height': 500}
     )
