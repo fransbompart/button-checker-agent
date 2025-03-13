@@ -1,21 +1,27 @@
-IDENTIFY_CONTENT_TASK_SOY_ZEN="""### Instructions
-1. Find the section "pageSectionName" in the page. 
-2. Extract the next details for each content item that are **ON the "pageSectionName" section**:previewDetails 
+IDENTIFY_CONTENT_TASK_SOY_ZEN="""###Objective
+Identify and describe all the content items in the "pageSectionName" section of the SoyZen platform.
 
----
+### Instructions
+1. If a dialog about Calendario Lunar appears, click on the x before continue.
+2. Find the section "pageSectionName" in the page. 
+3. Extract the next details for each content item that are **ON the "pageSectionName" section**:previewDetails
+4. Analyze the information extracted and return a response following the output format. 
 
-**Important:**
-- First, if a dialog about Calendario Lunar appears, click on the x before continue.
 """
 
-EVALUATE_CONTENT_TASK = """Click on the post item with title "content_preview_title" using the custom function click_post_item, the number of the post is previewNumber.
-Then:
-- If you are in the post page:
-  - **Extract** the whole page.
-  - Indicate if it is a blog or an audio/video, and provide a clear description of it. If certain details are unavailable, the response should still include as much relevant information as possible. For example:
-    - This is a blog post. The topic appears to be about renewable energy, but the author and publication date are not available. The content discusses the benefits of solar power and wind energy.
-    - This is a video file. The title and creator are not specified, but the video appears to be a tutorial on graphic design basics. The duration is not provided neither. 
-- Else, if a dialog with message "¡Prueba Gratis 5 días!" appers, say it and end the task successfully.
+EVALUATE_CONTENT_TASK = """###Objective
+Evaluate the content item in the "pageSectionName" section of the SoyZen platform.
+
+### Instructions
+1. Click on the post item with title "content_preview_title" using the custom function click_post_item, the number of the post is previewNumber.
+2. Then, there is a condition for the next steps:
+  - If you are not in home, you are in the post page:
+    - **Extract** the whole page.
+    - Indicate if it is a "blog" or an "audio/video", and provide a clear description of it. If certain details are unavailable, the response should still include as much relevant information as possible. For example:
+      - This is a blog post. The topic appears to be about renewable energy, but the author and publication date are not available. The content discusses the benefits of solar power and wind energy.
+      - This is a video file. The title and creator are not specified, but the video appears to be a tutorial on graphic design basics. The duration is not provided neither. 
+  - Else, if a dialog with message "¡Prueba Gratis 5 días!" (app-modal-subscription tag in HTML) appers:
+    - Set dialog_opened as True, as page description return "Dialog appeared with message !Prueba Gratis 5 días!" and end the task successfully.
 ---
 **Important:**
 - First, if a dialog about Calendario Lunar appears, close it on the x before continue.

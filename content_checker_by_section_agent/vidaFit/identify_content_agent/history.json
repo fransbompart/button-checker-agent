@@ -3,9 +3,9 @@
     {
       "model_output": {
         "current_state": {
-          "evaluation_previous_goal": "Success - The page contains the section with recipes",
-          "memory": "I have identified the section. I need to extract the recipe items details. 0 out of N recipe items processed",
-          "next_goal": "Extract recipe details"
+          "evaluation_previous_goal": "Success - I found the section",
+          "memory": "I have extracted 0 out of N recipes. I need to find all recipes in the section and extract the title and categories for each one.",
+          "next_goal": "Extract the recipe preview title and categories"
         },
         "action": [
           {
@@ -18,7 +18,7 @@
       "result": [
         {
           "is_done": false,
-          "extracted_content": "\ud83d\udcc4  Extracted from page\n: ```json\n{\n  \"recipePreviews\": [\n    {\n      \"title\": \"Receta de Nutella casera y saludable\",\n      \"categories\": [\"Recetas Fitness\", \"Meriendas Saludables\"]\n    },\n    {\n      \"title\": \"Ensalada de pollo fr\u00eda\",\n      \"categories\": [\"Recetas Fitness\", \"Cenas Saludables\"]\n    },\n    {\n      \"title\": \"Cheesecake de chocolate\",\n      \"categories\": [\"Recetas Fitness\", \"Postres Saludables\"]\n    },\n    {\n      \"title\": \"Ponquecitos express para ni\u00f1os\",\n      \"categories\": [\"Recetas Fitness\", \"Meriendas Saludables\"]\n    },\n    {\n      \"title\": \"Pancitos de espinaca\",\n      \"categories\": [\"Recetas Fitness\", \"Desayunos Saludables\"]\n    },\n    {\n      \"title\": \"Galletas de auyama (calabaza) tipo tartaletas\",\n      \"categories\": [\"Recetas Fitness\", \"Meriendas Saludables\"]\n    }\n  ]\n}\n```\n",
+          "extracted_content": "\ud83d\udcc4  Extracted from page\n: ```json\n{\n  \"recipe_previews\": [\n    {\n      \"title\": \"Receta de Nutella casera y saludable\",\n      \"categories\": [\"Recetas Fitness\", \"Meriendas Saludables\"]\n    },\n    {\n      \"title\": \"Ensalada de pollo fr\u00eda\",\n      \"categories\": [\"Recetas Fitness\", \"Cenas Saludables\"]\n    },\n    {\n      \"title\": \"Cheesecake de chocolate\",\n      \"categories\": [\"Recetas Fitness\", \"Postres Saludables\"]\n    },\n    {\n      \"title\": \"Ponquecitos express para ni\u00f1os\",\n      \"categories\": [\"Recetas Fitness\", \"Meriendas Saludables\"]\n    },\n    {\n      \"title\": \"Pancitos de espinaca\",\n      \"categories\": [\"Recetas Fitness\", \"Desayunos Saludables\"]\n    },\n    {\n      \"title\": \"Galletas de auyama (calabaza) tipo tartaletas\",\n      \"categories\": [\"Recetas Fitness\", \"Meriendas Saludables\"]\n    }\n  ]\n}\n```\n",
           "include_in_memory": true
         }
       ],
@@ -43,8 +43,8 @@
         "title": "Recetas Fitness | Vida Fit"
       },
       "metadata": {
-        "step_start_time": 1741741846.2471018,
-        "step_end_time": 1741741854.342101,
+        "step_start_time": 1741789374.0921605,
+        "step_end_time": 1741789389.002002,
         "input_tokens": 3152,
         "step_number": 2
       }
@@ -52,8 +52,8 @@
     {
       "model_output": {
         "current_state": {
-          "evaluation_previous_goal": "Success - I extracted all recipe items details",
-          "memory": "I have completed the task. All recipe items have been processed.",
+          "evaluation_previous_goal": "Success - All recipe items have been identified and described",
+          "memory": "I have extracted 6 out of 6 recipes. All recipes in the section have been processed.",
           "next_goal": "Finish the task"
         },
         "action": [
@@ -137,9 +137,9 @@
         "title": "Recetas Fitness | Vida Fit"
       },
       "metadata": {
-        "step_start_time": 1741741854.3424382,
-        "step_end_time": 1741741860.4343483,
-        "input_tokens": 3595,
+        "step_start_time": 1741789389.0042946,
+        "step_end_time": 1741789422.9809768,
+        "input_tokens": 3604,
         "step_number": 3
       }
     }

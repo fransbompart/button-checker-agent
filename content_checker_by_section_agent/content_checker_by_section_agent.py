@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import os
 from utils.load_json_file import load_json_file
+from utils.save_json_file import save_json_file
 from browser_use import Agent, BrowserConfig, Browser, Controller, ActionResult
 from pydantic import SecretStr
 from browser_use.browser.context import BrowserContextConfig, BrowserContext
@@ -63,7 +64,7 @@ class ContentCheckerBySectionAgent(ABC):
         identify_content_agent_history.save_to_file(self.agentPath + '/identify_content_agent/history.json')
 
         result = identify_content_agent_history.final_result()
-        self.result_to_file('identify_content_agent/result', result)
+        save_json_file(self.agentPath, 'identify_content_agent/result', result)
 
         if result:
             pageContents: PageContentPreviews = PageContentPreviews.model_validate_json(result)
@@ -95,7 +96,7 @@ class ContentCheckerBySectionAgent(ABC):
 
         prompt = "In base of the information provided, verify if each of the next previews and pages contents match.\n---\n" 
         
-        for i in range(len(previews.previews[:6])):
+        for i in range(len(previews.previews)):
             preview = previews.previews[i]
             page = pages.pages[i]
 
@@ -115,7 +116,7 @@ class ContentCheckerBySectionAgent(ABC):
         contents = PagesContents(pages=[])
 
         if pagesContentsPreviews: 
-            for i, preview in enumerate(pagesContentsPreviews.previews[:6]):
+            for i, preview in enumerate(pagesContentsPreviews.previews):
                 page = await self.check_page_content(preview, i)        
             
                 if page:
@@ -124,8 +125,8 @@ class ContentCheckerBySectionAgent(ABC):
         else:
             raise Exception('No Page Contents found')
         
-        self.result_to_file('check_content_agent/final/previews', pagesContentsPreviews.model_dump_json())
-        self.result_to_file('check_content_agent/final/contents', contents.model_dump_json())
+        save_json_file(self.agentPath, 'check_content_agent/final/previews', pagesContentsPreviews.model_dump_json())
+        save_json_file(self.agentPath, 'check_content_agent/final/contents', contents.model_dump_json())
 
         await self.browser.close()
         await self.browserContext.close()

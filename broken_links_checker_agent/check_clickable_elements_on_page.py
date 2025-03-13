@@ -1,0 +1,2 @@
+def checkClickableElementsOnPage(self, page):
+    
