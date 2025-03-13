@@ -68,10 +68,10 @@ async def main():
     # await check_buttons()
 
     # await check_content_vida_fit()
-    await check_content_soy_zen()
+    # await check_content_soy_zen()
 
     # await email_log_in()
-    # await operator_log_in()
+    await operator_log_in()
 
     # await onboarding_agent()
 

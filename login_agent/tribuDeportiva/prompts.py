@@ -19,12 +19,17 @@ Log in to the Tribu Deportiva app with the provided credentials and telephone op
 
 ### Instructions
 
-1. Click on the button that has a operator_name Logo Image.
-2. Click on the Código button (is an element with tag: mat-select) and select `telephone_code` value.
-3. Write `telephone_number` in the telephone number text field.
+1. **Click** on the button that has a **operator_name Logo Image**.
+2. Write `telephone_number` in the telephone number text field.
+3. Click on the selector (is an mat-form-field element) and select `telephone_code` value.
 4. Close the selector, if not, you will not be able to continue.
 5. Click on the "Iniciar Sesión" button.
 6. Verify that the login was successful by checking if the app redirects to the home page.
 7. Click on the Profile Button.
-8. Verify if the value `username@tribudeportivaguest.com` appears on the profile pop-up displayed (is an mat-mdc-menu-content), if so, the login was successful. In this step, don't navigate to another page.
+8. Verify if the value `username@tribudeportivaguest.com` appears on the profile pop-up displayed (is an mat-mdc-menu-content), if so, the login was successful.
+
+### Important
+
+- Don't click on TribuDeportiva Logo Image or any other button that is not specified in the instructions.
+- Don't navigate to any other page that is not specified in the instructions.
 """

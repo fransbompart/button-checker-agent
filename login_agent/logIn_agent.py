@@ -40,7 +40,7 @@ class LogInAgent():
         self.messageContext = messageContext
 
     async def runEmailLogIn(self, email: str, password: str) -> LogInAgentOutput:
-        controller = Controller(output_model=LogInAgentOutput)
+        controller = Controller(output_model=LogInAgentOutput, exclude_actions=['search_google', 'go_to_url'])
 
         prompt = self.emailLogInTaskPrompt
 
