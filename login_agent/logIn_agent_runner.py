@@ -14,7 +14,7 @@ class LogInAgentRunner:
 
         agent = LogInAgent(
             initialActions=[
-                {'open_tab': {'url': 'https://tribudeportiva.com/auth/login'}},
+                {'open_tab': {'url': 'https://soyzen.com/auth/login'}},
             ],
             emailLogInTaskPrompt = TRIBU_DEPORTIVA_EMAIL_LOGIN_TASK_PROMPT,
             telephoneOperatorTaskPrompt = TRIBU_DEPORTIVA_OPERATOR_LOGIN_TASK_PROMPT,

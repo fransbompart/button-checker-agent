@@ -3,9 +3,9 @@
     {
       "model_output": {
         "current_state": {
-          "evaluation_previous_goal": "Success - I clicked on the post",
-          "memory": "Clicked on post 6 out of 6. Next step is to extract the content and classify it.",
-          "next_goal": "Extract the content of the page and classify it as blog or audio/video"
+          "evaluation_previous_goal": "Unknown",
+          "memory": "I haven't done anything yet. This is the first step.",
+          "next_goal": "Click on post 6 and check if a dialog appears or if we are on the post page"
         },
         "action": [
           {
@@ -79,9 +79,9 @@
         "title": "SoyZen"
       },
       "metadata": {
-        "step_start_time": 1741825876.575207,
-        "step_end_time": 1741825884.564601,
-        "input_tokens": 3501,
+        "step_start_time": 1742218542.1620798,
+        "step_end_time": 1742218547.9697583,
+        "input_tokens": 3528,
         "step_number": 2
       }
     },
@@ -89,14 +89,14 @@
       "model_output": {
         "current_state": {
           "evaluation_previous_goal": "Success - Dialog appeared as expected",
-          "memory": "Task completed successfully. Dialog with message \"\u00a1Prueba Gratis 5 d\u00edas!\" appeared.",
+          "memory": "I clicked on the post. The dialog appeared. Task finished.",
           "next_goal": "Finish the task"
         },
         "action": [
           {
             "done": {
               "dialog_opened": true,
-              "page_description": "Dialog with message \"\u00a1Prueba Gratis 5 d\u00edas!\" appeared.",
+              "page_description": "Dialog appeared with message \u00a1Prueba Gratis 5 d\u00edas!",
               "page_url": "https://soyzen.com/home",
               "success": true
             }
@@ -107,7 +107,7 @@
         {
           "is_done": true,
           "success": true,
-          "extracted_content": "{\"dialog_opened\": true, \"page_description\": \"Dialog with message \\\"\\u00a1Prueba Gratis 5 d\\u00edas!\\\" appeared.\", \"page_url\": \"https://soyzen.com/home\"}",
+          "extracted_content": "{\"dialog_opened\": true, \"page_description\": \"Dialog appeared with message \\u00a1Prueba Gratis 5 d\\u00edas!\", \"page_url\": \"https://soyzen.com/home\"}",
           "include_in_memory": false
         }
       ],
@@ -167,9 +167,9 @@
         "title": "SoyZen"
       },
       "metadata": {
-        "step_start_time": 1741825884.5650077,
-        "step_end_time": 1741825888.0438166,
-        "input_tokens": 3656,
+        "step_start_time": 1742218547.9704094,
+        "step_end_time": 1742218551.3237233,
+        "input_tokens": 3667,
         "step_number": 3
       }
     }

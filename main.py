@@ -14,12 +14,15 @@ from login_agent.logIn_methods import EmailLogInMethod, TelephoneOperatorLogInMe
 from onboarding_agent.onboarding_agent_runner import OnboardingAgentRunner
 
 async def check_buttons():
+    api_key = os.getenv('GEMINI_API_KEY', '')
+
     agent = ButtonCheckerAgent(
         initial_actions=[
-            {'open_tab': {'url': 'https://aqustico.com/home'}},
+            {'open_tab': {'url': 'https://mandarinatec.com/home'}},
         ],
-        return_page_url='https://aqustico.com/home',
-        browser_window_size={'width': 1280, 'height': 500}
+        return_page_url='https://mandarinatec.com/home',
+        browser_window_size={'width': 1280, 'height': 500},
+        api_key=api_key,
     )
 
     await agent.check()
@@ -71,9 +74,9 @@ async def main():
     # await check_content_soy_zen()
 
     # await email_log_in()
-    await operator_log_in()
+    # await operator_log_in()
 
-    # await onboarding_agent()
+    await onboarding_agent()
 
 
 if __name__ == '__main__':

@@ -1,0 +1,150 @@
+{
+    "matches": {
+      "contents": [
+        {
+          "content_title": "Regalemos razones para sonreir",
+          "match_preview": true,
+          "differences": "No differences found"
+        },
+        {
+          "content_title": "Ritual de San Valentin para atraer el amor",
+          "match_preview": true,
+          "differences": "No major differences, but page description lacks detail"
+        },
+        {
+          "content_title": "Ritual especial para el portal 2/2",
+          "match_preview": true,
+          "differences": "No major differences, but page description lacks detail"
+        },
+        {
+          "content_title": "¿Qué traerá el yoga a mi vida?",
+          "match_preview": false,
+          "differences": "The page content is unrelated to the preview title"
+        },
+        {
+          "content_title": "Ejercicio de respiración 4 - 7 - 8",
+          "match_preview": false,
+          "differences": "The page shows a dialog, not the expected content"
+        },
+        {
+          "content_title": "Meditación Especial | Eclipse Solar",
+          "match_preview": false,
+          "differences": "The page shows a dialog, not the expected content"
+        },
+        {
+          "content_title": "Entendiendo la terapia cognitivo-conductual",
+          "match_preview": false,
+          "differences": "The page shows a dialog, not the expected content"
+        },
+        {
+          "content_title": "Enfrentando adversidades: claves para crecer en tiempos difíciles",
+          "match_preview": false,
+          "differences": "The page shows a dialog, not the expected content"
+        }
+      ]
+    },
+    "previews": {
+      "previews": [
+        {
+          "content_preview_title": "Regalemos razones para sonreir",
+          "content_preview_categories": "Meditación",
+          "content_preview_type": "Video",
+          "public_access": true,
+          "content_preview_duration": "45 sec"
+        },
+        {
+          "content_preview_title": "Ritual de San Valentin para atraer el amor",
+          "content_preview_categories": "Meditación",
+          "content_preview_type": "Video",
+          "public_access": true,
+          "content_preview_duration": "43 sec"
+        },
+        {
+          "content_preview_title": "Ritual especial para el portal 2/2",
+          "content_preview_categories": "Meditación",
+          "content_preview_type": "Video",
+          "public_access": true,
+          "content_preview_duration": "48 sec"
+        },
+        {
+          "content_preview_title": "¿Qué traerá el yoga a mi vida?",
+          "content_preview_categories": "Yoga",
+          "content_preview_type": "Video",
+          "public_access": true,
+          "content_preview_duration": "3 min"
+        },
+        {
+          "content_preview_title": "Ejercicio de respiración 4 - 7 - 8",
+          "content_preview_categories": "Meditación",
+          "content_preview_type": "Video",
+          "public_access": true,
+          "content_preview_duration": "4 min"
+        },
+        {
+          "content_preview_title": "Meditación Especial | Eclipse Solar",
+          "content_preview_categories": "Meditación",
+          "content_preview_type": "Video",
+          "public_access": true,
+          "content_preview_duration": "30 min"
+        },
+        {
+          "content_preview_title": "Entendiendo la terapia cognitivo-conductual",
+          "content_preview_categories": "null",
+          "content_preview_type": "Blog",
+          "public_access": true,
+          "content_preview_duration": "null"
+        },
+        {
+          "content_preview_title": "Enfrentando adversidades: claves para crecer en tiempos difíciles",
+          "content_preview_categories": "null",
+          "content_preview_type": "Blog",
+          "public_access": true,
+          "content_preview_duration": "null"
+        }
+      ]
+    },
+    "contents": {
+      "pages": [
+        {
+          "dialog_opened": false,
+          "page_description": "This is an audio/video file. The title is \"Regalemos razones para sonreir\".\u00a0 More details such as author and publication date are unavailable. The video appears to be a guided meditation, based on the title and the player interface.",
+          "page_url": "https://soyzen.com/home/meditacion/para-manifestar/regalemos-razones-para-sonreir"
+        },
+        {
+          "dialog_opened": false,
+          "page_description": "The page contains an audio/video player. The content seems to be related to relaxation or mindfulness, based on the website name 'SoyZen'. More details about the content are unavailable without further interaction or information.",
+          "page_url": "https://soyzen.com/home/meditacion/para-manifestar/ritual-de-san-valentin-para-atra"
+        },
+        {
+          "dialog_opened": false,
+          "page_description": "This is an audio/video. The title is 'Ritual especial para el portal 2/2'. It seems to be a guided meditation or similar content related to spirituality and personal growth. More specific details are unavailable due to the nature of the media player interface.",
+          "page_url": "https://soyzen.com/home/meditacion/para-manifestar/ritual-especial-para-el-portal-2"
+        },
+        {
+          "dialog_opened": false,
+          "page_description": "This is an audio/video file. The title and creator are not specified, but the video appears to be a tutorial on graphic design basics. The duration is not provided neither.",
+          "page_url": "https://soyzen.com/home/yoga/inspo-yoga/que-traera-el-yoga-a-mi-vida"
+        },
+        {
+          "dialog_opened": true,
+          "page_description": "¡Prueba Gratis 5 días! dialog appeared",
+          "page_url": "https://soyzen.com/home"
+        },
+        {
+          "dialog_opened": true,
+          "page_description": "Dialog appeared with message ¡Prueba Gratis 5 días!",
+          "page_url": "https://soyzen.com/home"
+        },
+        {
+          "dialog_opened": true,
+          "page_description": "Dialog appeared with message ¡Prueba Gratis 5 días!",
+          "page_url": "https://soyzen.com/home"
+        },
+        {
+          "dialog_opened": true,
+          "page_description": "Dialog appeared with message ¡Prueba Gratis 5 días!",
+          "page_url": "https://soyzen.com/home"
+        }
+      ]
+    }
+  }
